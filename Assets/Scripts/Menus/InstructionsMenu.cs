@@ -4,53 +4,67 @@ using UnityEngine;
 
 public class InstructionsMenu : MonoBehaviour
 {
-    const int MAIN_MENU = 0;
-
-    [SerializeField] RectTransform[] options;
-    [SerializeField] RectTransform selector;
     [SerializeField] AudioClip okSound;
-    [SerializeField] AudioClip changeSelectionSound;
-
     AudioSource audioSource;
+    bool locked = false;
+    bool instructionsLocked = false;
+    int state = 0;
 
-    int idx;
+    const string STATE = "State";
+
+    [SerializeField] GameObject leftArrow, rightArrow;
+    [SerializeField] Animator animator;
 
     void Start() {
+        animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
-        idx = MAIN_MENU;
-        updateSelector();
+        UpdateMenu();
     }
 
-    void Update() {
-        if (Input.GetKeyDown(KeyCode.J)) {
+    private void UpdateMenu()
+    {
+        checkArrows();
+        updateAnimator();
+    }
+
+    private void checkArrows() {
+        leftArrow.SetActive(state != 0);
+        rightArrow.SetActive(state != 3);
+    }
+
+    private void updateAnimator() {
+        animator.SetInteger(STATE, state);
+    }
+
+    public void MainMenuOption() {
+        if (!locked) {
+            locked = true;
+            SceneTransitioner.singleton.gotoScene(Scenes.MAIN_MENU);
             audioSource.PlayOneShot(okSound);
-            selectOption();
-        } else if (Input.GetKeyDown(KeyCode.W)) {
-            audioSource.PlayOneShot(changeSelectionSound);
-            idx--;
-            updateSelector();
-        } else if (Input.GetKeyDown(KeyCode.S)) {
-            audioSource.PlayOneShot(changeSelectionSound);
-            idx++;
-            updateSelector();
         }
     }
 
-    protected void updateSelector() {
-        if (idx > options.Length-1) { idx = 0; }
-        if (idx < 0) { idx = options.Length - 1; }
-
-        selector.anchoredPosition = new Vector2(
-            selector.anchoredPosition.x,
-            options[idx].anchoredPosition.y
-            );
+    public void RightOption() {
+        if (!instructionsLocked) {
+            instructionsLocked = true;
+            state++;
+            UpdateMenu();
+            StartCoroutine(unlockInstructions());
+        }
     }
 
-    protected void selectOption() {
-        switch (idx) {
-            case MAIN_MENU:
-                SceneTransitioner.singleton.gotoScene(Scenes.MAIN_MENU);
-                break;
+    public void LeftOption() {
+        if (!instructionsLocked) {
+            instructionsLocked = true;
+            state--;
+            UpdateMenu();
+            StartCoroutine(unlockInstructions());
         }
+    }
+
+    IEnumerator unlockInstructions()
+    {
+        yield return new WaitForSeconds(1f);
+        instructionsLocked = false;
     }
 }
