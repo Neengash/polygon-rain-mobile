@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerShooter : MonoBehaviour
 {
@@ -48,7 +49,11 @@ public class PlayerShooter : MonoBehaviour
             shootTimer -= Time.deltaTime;
         }
 
-        if (Input.GetKeyDown(KeyCode.J) && shootTimer <= 0 && !PlayerController.singleton.isHurting()) {
+        if (
+            (shootInput()) && 
+            (shootTimer <= 0) && 
+            (!PlayerController.singleton.isHurting())
+        ) {
             PlayerController.singleton.shootAnim();
             shootTimer = BASE_SHOOT_TIMER;
             if (baseBullets > 0) {
@@ -57,6 +62,13 @@ public class PlayerShooter : MonoBehaviour
                 shootExtraBullet();
             }
         }
+    }
+
+    private bool shootInput() {
+        return
+            Input.touchCount > 0 &&
+            Input.GetTouch(0).phase == TouchPhase.Began &&
+            !EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
     }
 
     public void recoverBaseBullet() { if (baseBullets < STARTING_BASE_BULLETS) baseBullets++; }

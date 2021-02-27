@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D rb;
     Animator anim;
     SpriteRenderer sRenderer;
+    PlayerInput playerInput;
     [SerializeField] ParticleSystem death;
     [SerializeField] AudioClip hurtSound;
     [SerializeField] AudioClip deadSound;
@@ -43,6 +44,7 @@ public class PlayerController : MonoBehaviour
         anim = GetComponent<Animator>();
         sRenderer = GetComponent<SpriteRenderer>();
         audioSource = GetComponent<AudioSource>();
+        playerInput = GetComponent<PlayerInput>();
         speed = BASE_SPEED;
         health = BASE_HEALTH;
         isHurt = false;
@@ -51,7 +53,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         if (health > 0 && GameManager.singleton.isPlaying()) {
-            float axis = Input.GetAxisRaw("Horizontal");
+            float axis = playerInput.GetTilt();
             bool isStill = Mathf.Abs(axis) < STILL_SPEED;
             anim.SetBool("Moving", !isStill);
             if (!isStill) {
@@ -63,7 +65,7 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         if (health > 0) {
-            float xSpeed = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+            float xSpeed = playerInput.GetTilt() * speed * Time.deltaTime;
             rb.velocity = new Vector2(xSpeed, rb.velocity.y);
         }
     }

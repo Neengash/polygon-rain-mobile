@@ -28,13 +28,13 @@ public class PauseManager : MonoBehaviour
 
     void Update() {
         if (GameManager.singleton.isPlaying() && Input.GetKeyDown(KeyCode.Escape)) {
-            pauseGame();
+            PauseGame();
         } else if(GameManager.singleton.isPaused() && Input.GetKeyDown(KeyCode.Escape)) {
             resumeGame();
         }
     }
 
-    void pauseGame()
+    public void PauseGame()
     {
         PauseCanvas.SetActive(true);
         GameManager.singleton.pauseGame();
