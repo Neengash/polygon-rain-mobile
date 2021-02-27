@@ -26,7 +26,7 @@ public class DropSpawner : MonoBehaviour
 
     public Drop getRandomDrop() {
         Drop drop = (Drop)dropPool.getNext();
-        drop.SetType(Random.Range(0, 3));
+        drop.SetType(Random.Range(0, 2));
         return drop;
     }
 }
