@@ -1180,6 +1180,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8345387804842502707, guid: b90e3aec9fa71c141b6e98217a81bc7a,
+        type: 3}
+      propertyPath: tiltMultiplication
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b90e3aec9fa71c141b6e98217a81bc7a, type: 3}
 --- !u!1001 &558189456811073266
