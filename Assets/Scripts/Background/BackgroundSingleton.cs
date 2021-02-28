@@ -13,7 +13,7 @@ public class BackgroundSingleton : MonoBehaviour
         } else {
             if (singleton != this) {
                 gameObject.SetActive(false);
-                Destroy(this);
+                Destroy(gameObject);
             }
         }
     }
